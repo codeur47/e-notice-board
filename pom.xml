@@ -262,4 +262,11 @@
 		</profile>
 	</profiles>
 
+	<distributionManagement>
+		<repository>
+			<id>github</id>
+			<name>E-noticeBoard Simple CRUD application</name>
+			<url>https://maven.pkg.github.com/codeur47/e-notice-board</url>
+		</repository>
+	</distributionManagement>
 </project>

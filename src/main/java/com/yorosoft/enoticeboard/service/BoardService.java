@@ -1,7 +1,6 @@
 package com.yorosoft.enoticeboard.service;
 
 import com.yorosoft.enoticeboard.dto.BoardDTO;
-import com.yorosoft.enoticeboard.mapper.BoardMapper;
 import com.yorosoft.enoticeboard.model.Board;
 import com.yorosoft.enoticeboard.repository.BoardRepository;
 import lombok.RequiredArgsConstructor;

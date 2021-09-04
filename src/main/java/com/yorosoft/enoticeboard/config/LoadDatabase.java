@@ -20,13 +20,12 @@ public class LoadDatabase {
 
     @Bean
     CommandLineRunner initDatabase() {
-        return args -> {
-            generateRandomAuthorDTOs().forEach(authorService::save);
-        };
+        return args -> generateRandomAuthorDTOs().forEach(authorService::save);
+
     }
 
     private List<AuthorDTO> generateRandomAuthorDTOs() {
-        List<AuthorDTO> authorDTOs = new ArrayList<AuthorDTO>();
+        List<AuthorDTO> authorDTOs = new ArrayList<>();
         Faker faker = null;
         Name name = null;
         for (int i = 0; i < 100; i++) {

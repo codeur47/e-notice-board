@@ -17,7 +17,7 @@ public abstract class CrudController<T extends BaseDTO> {
 
     private final CrudService<T> service;
 
-    public CrudController(CrudService<T> crudService){
+    protected CrudController(CrudService<T> crudService){
         this.service = crudService;
     }
 
@@ -37,8 +37,8 @@ public abstract class CrudController<T extends BaseDTO> {
     public ResponseEntity<T> getById(@PathVariable Long id){
         Optional<T> optionalT = service.findById(id);
 
-        return optionalT.map(T ->
-                        new ResponseEntity<>(T, HttpStatus.OK))
+        return optionalT.map(t ->
+                        new ResponseEntity<>(t, HttpStatus.OK))
                 .orElseThrow(() -> new ResourceNotFoundException(id));
     }
 
@@ -53,7 +53,7 @@ public abstract class CrudController<T extends BaseDTO> {
     public ResponseEntity<String> delete(@PathVariable Long id){
         Optional<T> optional = service.findById(id);
 
-        return optional.map(T ->
+        return optional.map(t ->
                         new ResponseEntity<>("Object with the id " + id + " was deleted.", HttpStatus.NO_CONTENT))
                 .orElseThrow(() -> new ResourceNotFoundException(id));
     }

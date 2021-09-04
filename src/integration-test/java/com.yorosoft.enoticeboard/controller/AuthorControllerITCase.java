@@ -12,8 +12,12 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 
+import static com.yorosoft.enoticeboard.config.CrudControllerAPIPath.*;
+
 @DisplayName("Integration Tests of the Author CRUD REST endpoints")
 public class AuthorControllerITCase extends CrudControllerITCase {
+
+    static final String CONTENT_TYPE = "application/json";
 
     @Test
     @DisplayName("GET a list with 5 Authors")
@@ -21,14 +25,14 @@ public class AuthorControllerITCase extends CrudControllerITCase {
         //when
         ValidatableResponse response = given()
                 .when()
-                .get( baseURL + "/authors/")
+                .get( baseURL + AUTHOR_BASE_URL + "/")
 
                 .prettyPeek()
                 .then();
 
         //then
         response.statusCode(HttpStatus.OK.value())
-                .contentType("application/json")
+                .contentType(CONTENT_TYPE)
                 .body("size()", greaterThanOrEqualTo(2));
     }
 
@@ -41,14 +45,14 @@ public class AuthorControllerITCase extends CrudControllerITCase {
         //when
         ValidatableResponse response = given()
                 .when()
-                .get(baseURL + "/authors/" + authorId)
+                .get(baseURL + AUTHOR_BASE_URL + "/" + authorId)
 
                 .prettyPeek()
                 .then();
 
         //then
         response.statusCode(HttpStatus.OK.value())
-                .contentType("application/json")
+                .contentType(CONTENT_TYPE)
                 .body("id", equalTo(2))
                 .body("firstName", equalTo("Jane"))
                 .body("lastName", equalTo("Doe"));
@@ -62,11 +66,11 @@ public class AuthorControllerITCase extends CrudControllerITCase {
 
         //when
         ValidatableResponse response = given()
-                .contentType("application/json")
+                .contentType(CONTENT_TYPE)
                 .body(authorJson.toString())
 
                 .when()
-                .post(baseURL + "/authors/")
+                .post(baseURL + AUTHOR_BASE_URL + "/")
 
                 .prettyPeek()
                 .then();
@@ -86,10 +90,10 @@ public class AuthorControllerITCase extends CrudControllerITCase {
 
         //when
         ValidatableResponse response = given()
-                .contentType("application/json")
+                .contentType(CONTENT_TYPE)
 
                 .when()
-                .delete(baseURL + "/authors/" + authorId)
+                .delete(baseURL + AUTHOR_BASE_URL + "/" + authorId)
 
                 .prettyPeek()
                 .then();
@@ -106,11 +110,11 @@ public class AuthorControllerITCase extends CrudControllerITCase {
 
         //when
         ValidatableResponse response = given()
-                .contentType("application/json")
+                .contentType(CONTENT_TYPE)
                 .body(authorJson.toString())
 
                 .when()
-                .put(baseURL + "/authors/" + authorId)
+                .put(baseURL + AUTHOR_BASE_URL + "/" + authorId)
 
                 .prettyPeek()
                 .then();

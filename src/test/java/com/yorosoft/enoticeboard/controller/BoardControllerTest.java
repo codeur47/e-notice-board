@@ -13,7 +13,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.Collections;
 import java.util.Optional;
 
 import static com.yorosoft.enoticeboard.util.TestDataFactory.*;
@@ -26,7 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(BoardController.class)
 @DisplayName("Unit tests of BoardController")
-public class BoardControllerTest {
+class BoardControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -36,7 +35,7 @@ public class BoardControllerTest {
 
     @Test
     @DisplayName("GET a list with single Board")
-    public void givenSingleBoard_whenGETfindAll_thenGetSingleBoardList() throws Exception {
+    void givenSingleBoard_whenGETfindAll_thenGetSingleBoardList() throws Exception {
         //given
         when(boardService.findAll())
                 .thenReturn(getBoardListDTO(1L, 1L));
@@ -54,7 +53,7 @@ public class BoardControllerTest {
 
     @Test
     @DisplayName("GET a Board by Id")
-    public void givenBoardId_whenGETById_thenGetSingleBoard() throws Exception {
+    void givenBoardId_whenGETById_thenGetSingleBoard() throws Exception {
         //given
         when(boardService.findById(1L))
                 .thenReturn(Optional.of(getSingleBoardDTO(1L, 1L)));
@@ -72,7 +71,7 @@ public class BoardControllerTest {
 
     @Test
     @DisplayName("GET a Board by Id and return 404 Not Found")
-    public void givenIncorrectBoardId_whenGETById_thenGetNotFoundBoard() throws Exception {
+    void givenIncorrectBoardId_whenGETById_thenGetNotFoundBoard() throws Exception {
         //given
         when(boardService.findById(1L))
                 .thenReturn(Optional.empty());
@@ -87,7 +86,7 @@ public class BoardControllerTest {
 
     @Test
     @DisplayName("POST a Notice to create it")
-    public void givenBoard_whenPOSTSave_thenGetSavedBoard() throws Exception {
+    void givenBoard_whenPOSTSave_thenGetSavedBoard() throws Exception {
         //given
         BoardDTO boardDTO = getSingleBoardDTO(1L, 5L);
         boardDTO.setId(null);
@@ -107,9 +106,9 @@ public class BoardControllerTest {
 
     @Test
     @DisplayName("DELETE a Board by Id")
-    public void givenBoardId_whenDELETEById_thenBoardIsDeleted() throws Exception {
+    void givenBoardId_whenDELETEById_thenBoardIsDeleted() throws Exception {
         //given
-        Long boardId = 1L;
+        long boardId = 1L;
         when(boardService.findById(1L))
                 .thenReturn(Optional.of(getSingleBoardDTO(1L, 5L)));
 
@@ -123,9 +122,9 @@ public class BoardControllerTest {
 
     @Test
     @DisplayName("DELETE a Board by Id and return 404 HTTP Not Found")
-    public void givenBoardId_whenDELETEbyId_thenBoardNotFound() throws Exception {
+    void givenBoardId_whenDELETEbyId_thenBoardNotFound() throws Exception {
         //given
-        Long boardId = 1L;
+        long boardId = 1L;
         when(boardService.findById(1L))
                 .thenReturn(Optional.empty());
 
@@ -139,9 +138,9 @@ public class BoardControllerTest {
 
     @Test
     @DisplayName("PUT a Board by Id to update it")
-    public void givenIdAndUpdatedBoard_whenPUTUpdate_thenBoardIsUpdated() throws Exception {
+    void givenIdAndUpdatedBoard_whenPUTUpdate_thenBoardIsUpdated() throws Exception {
         //given
-        Long boardId = 1L;
+        long boardId = 1L;
         BoardDTO boardDTO = getSingleBoardDTO(1L, 5L);
 
         when(boardService.findById(1L))
@@ -166,9 +165,9 @@ public class BoardControllerTest {
 
     @Test
     @DisplayName("PUT a Board by Id to update it and return 404 HTTP Not Found")
-    public void givenIdAndUpdatedBoard_whenPUTUpdate_thenBoardNotFound() throws Exception {
+    void givenIdAndUpdatedBoard_whenPUTUpdate_thenBoardNotFound() throws Exception {
         //given
-        Long boardId = 1L;
+        long boardId = 1L;
         BoardDTO boardDTO = getSingleBoardDTO(1L, 5L);
 
         when(boardService.findById(1L))

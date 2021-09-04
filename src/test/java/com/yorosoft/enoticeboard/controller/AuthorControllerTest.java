@@ -13,7 +13,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.Collections;
 import java.util.Optional;
 
 import static com.yorosoft.enoticeboard.util.TestDataFactory.*;
@@ -26,7 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(AuthorController.class)
 @DisplayName("Unit tests of AuthorController")
-public class AuthorControllerTest {
+class AuthorControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -36,7 +35,7 @@ public class AuthorControllerTest {
 
     @Test
     @DisplayName("GET a list with single Author")
-    public void givenSingleAuthor_whenGETfindAll_thenGetSingleAuthorList() throws Exception {
+    void givenSingleAuthor_whenGETfindAll_thenGetSingleAuthorList() throws Exception {
         //given
         when(authorService.findAll())
                 .thenReturn(getAuthorListDTO(1L));
@@ -54,7 +53,7 @@ public class AuthorControllerTest {
 
     @Test
     @DisplayName("GET an Author by Id")
-    public void givenAuthorId_whenGETById_thenGetSingleAuthor() throws Exception {
+    void givenAuthorId_whenGETById_thenGetSingleAuthor() throws Exception {
         //given
         when(authorService.findById(1L))
                 .thenReturn(Optional.of(getSingleAuthorDTO(1L)));
@@ -72,7 +71,7 @@ public class AuthorControllerTest {
 
     @Test
     @DisplayName("GET an Author by Id and return 404 Not Found")
-    public void givenIncorrectAuthorId_whenGETById_thenGetNotFoundBoard() throws Exception {
+    void givenIncorrectAuthorId_whenGETById_thenGetNotFoundBoard() throws Exception {
         //given
         when(authorService.findById(1L))
                 .thenReturn(Optional.empty());
@@ -87,7 +86,7 @@ public class AuthorControllerTest {
 
     @Test
     @DisplayName("POST an Author to create it")
-    public void givenAuthor_whenPOSTSave_thenGetSavedAuthor() throws Exception {
+    void givenAuthor_whenPOSTSave_thenGetSavedAuthor() throws Exception {
         //given
         AuthorDTO authorDTO = getSingleAuthorDTO(1L);
         authorDTO.setId(null);
@@ -107,9 +106,9 @@ public class AuthorControllerTest {
 
     @Test
     @DisplayName("DELETE an Author by Id")
-    public void givenAuthorId_whenDELETEById_thenAuthorIsDeleted() throws Exception {
+    void givenAuthorId_whenDELETEById_thenAuthorIsDeleted() throws Exception {
         //given
-        Long authorId = 1L;
+        long authorId = 1L;
         when(authorService.findById(1L))
                 .thenReturn(Optional.of(getSingleAuthorDTO(1L)));
 
@@ -123,9 +122,9 @@ public class AuthorControllerTest {
 
     @Test
     @DisplayName("DELETE an Author by Id and return 404 HTTP Not Found")
-    public void givenAuthorId_whenDELETEbyId_thenAuthorNotFound() throws Exception {
+    void givenAuthorId_whenDELETEbyId_thenAuthorNotFound() throws Exception {
         //given
-        Long authorId = 1L;
+        long authorId = 1L;
         when(authorService.findById(1L))
                 .thenReturn(Optional.empty());
 
@@ -139,9 +138,9 @@ public class AuthorControllerTest {
 
     @Test
     @DisplayName("PUT an Author by Id to update it")
-    public void givenIdAndUpdatedAuthor_whenPUTUpdate_thenAuthorIsUpdated() throws Exception {
+    void givenIdAndUpdatedAuthor_whenPUTUpdate_thenAuthorIsUpdated() throws Exception {
         //given
-        Long authorId = 1L;
+        long authorId = 1L;
         AuthorDTO authorDTO = getSingleAuthorDTO(1L);
 
         when(authorService.findById(1L))
@@ -166,9 +165,9 @@ public class AuthorControllerTest {
 
     @Test
     @DisplayName("PUT an Author by Id to update it and return 404 HTTP Not Found")
-    public void givenIdAndUpdatedAuthor_whenPUTUpdate_thenAuthorNotFound() throws Exception {
+    void givenIdAndUpdatedAuthor_whenPUTUpdate_thenAuthorNotFound() throws Exception {
         //given
-        Long authorId = 1L;
+        long authorId = 1L;
         AuthorDTO authorDTO = getSingleAuthorDTO(1L);
 
         when(authorService.findById(1L))

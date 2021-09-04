@@ -13,7 +13,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.Collections;
 import java.util.Optional;
 
 import static com.yorosoft.enoticeboard.util.TestDataFactory.*;
@@ -26,7 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(NoticeController.class)
 @DisplayName("Unit tests of NoticeController")
-public class NoticeControllerTest {
+class NoticeControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -36,7 +35,7 @@ public class NoticeControllerTest {
 
     @Test
     @DisplayName("GET a list with single Notice")
-    public void givenSingleNotice_whenGETNotices_thenGetSingleNoticeList() throws Exception {
+    void givenSingleNotice_whenGETNotices_thenGetSingleNoticeList() throws Exception {
         //given
         when(noticeService.findAll())
                 .thenReturn(getNoticeListDTO(1L));
@@ -54,7 +53,7 @@ public class NoticeControllerTest {
 
     @Test
     @DisplayName("GET a Notice by Id")
-    public void givenNoticeId_whenGETNoticesById_thenGetSingleNotice() throws Exception {
+    void givenNoticeId_whenGETNoticesById_thenGetSingleNotice() throws Exception {
         //given
         when(noticeService.findById(1L))
                 .thenReturn(Optional.of(getSingleNoticeDTO(1L)));
@@ -72,7 +71,7 @@ public class NoticeControllerTest {
 
     @Test
     @DisplayName("GET a Notice by Id and return 404 Not Found")
-    public void givenIncorrectNoticeId_whenGETNoticesById_thenGetNotFoundNotice() throws Exception {
+    void givenIncorrectNoticeId_whenGETNoticesById_thenGetNotFoundNotice() throws Exception {
         //given
         when(noticeService.findById(1L))
                 .thenReturn(Optional.empty());
@@ -87,7 +86,7 @@ public class NoticeControllerTest {
 
     @Test
     @DisplayName("POST a Notice to create it")
-    public void givenNotice_whenPOSTSave_thenGetSavedNotice() throws Exception {
+    void givenNotice_whenPOSTSave_thenGetSavedNotice() throws Exception {
         //given
         NoticeDTO noticeDTO = getSingleNoticeDTO(1L);
         noticeDTO.setId(null);
@@ -107,9 +106,9 @@ public class NoticeControllerTest {
 
     @Test
     @DisplayName("DELETE a Notice by Id")
-    public void givenNoticeId_whenDELETENotice_thenNoticeIsDeleted() throws Exception {
+    void givenNoticeId_whenDELETENotice_thenNoticeIsDeleted() throws Exception {
         //given
-        Long noticeId = 1L;
+        long noticeId = 1L;
         when(noticeService.findById(1L))
                 .thenReturn(Optional.of(getSingleNoticeDTO(1L)));
 
@@ -123,9 +122,9 @@ public class NoticeControllerTest {
 
     @Test
     @DisplayName("DELETE a Notice by Id and return 404 HTTP Not Found")
-    public void givenNoticeId_whenDELETENotice_thenNoticeNotFound() throws Exception {
+    void givenNoticeId_whenDELETENotice_thenNoticeNotFound() throws Exception {
         //given
-        Long noticeId = 1L;
+        long noticeId = 1L;
         when(noticeService.findById(1L))
                 .thenReturn(Optional.empty());
 
@@ -139,9 +138,9 @@ public class NoticeControllerTest {
 
     @Test
     @DisplayName("PUT a Notice by Id to update it")
-    public void givenIdAndUpdatedNotice_whenPUTUpdate_thenNoticeIsUpdated() throws Exception {
+    void givenIdAndUpdatedNotice_whenPUTUpdate_thenNoticeIsUpdated() throws Exception {
         //given
-        Long noticeId = 1L;
+        long noticeId = 1L;
         NoticeDTO noticeDTO = getSingleNoticeDTO(1L);
 
         when(noticeService.findById(1L))
@@ -166,9 +165,9 @@ public class NoticeControllerTest {
 
     @Test
     @DisplayName("PUT a Notice by Id to update it and return 404 HTTP Not Found")
-    public void givenIdAndUpdatedNotice_whenPUTUpdate_thenNoticeNotFound() throws Exception {
+    void givenIdAndUpdatedNotice_whenPUTUpdate_thenNoticeNotFound() throws Exception {
         //given
-        Long noticeId = 1L;
+        long noticeId = 1L;
         NoticeDTO noticeDTO = getSingleNoticeDTO(1L);
 
         when(noticeService.findById(1L))

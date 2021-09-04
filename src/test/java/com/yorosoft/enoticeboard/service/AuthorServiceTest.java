@@ -1,9 +1,9 @@
 package com.yorosoft.enoticeboard.service;
 
 import com.yorosoft.enoticeboard.dto.AuthorDTO;
-import com.yorosoft.enoticeboard.mapper.AuthorMapper;
 import com.yorosoft.enoticeboard.model.Author;
 import com.yorosoft.enoticeboard.repository.AuthorRepository;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -17,12 +17,11 @@ import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
-import static org.junit.Assert.*;
 import static com.yorosoft.enoticeboard.util.TestDataFactory.*;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("Unit tests of AuthorService class")
-public class AuthorServiceTest {
+class AuthorServiceTest {
     @Mock
     private AuthorRepository authorRepository;
 
@@ -31,7 +30,7 @@ public class AuthorServiceTest {
 
     @Test
     @DisplayName("Get an empty list of Author")
-    public void givenNoAuthors_whenFindAll_thenGetEmptyList() {
+    void givenNoAuthors_whenFindAll_thenGetEmptyList() {
         //given
         when(authorRepository.findAll())
                 .thenReturn(Collections.emptyList());
@@ -40,12 +39,12 @@ public class AuthorServiceTest {
         List<AuthorDTO> authorList = authorService.findAll();
 
         //then
-        assertEquals(0, authorList.size());
+        Assertions.assertEquals(0, authorList.size());
     }
 
     @Test
     @DisplayName("Get a list with single Author")
-    public void givenSingleAuthors_whenFindAll_thenSingleAuthorList() {
+    void givenSingleAuthors_whenFindAll_thenSingleAuthorList() {
         //given
         when(authorRepository.findAll())
                 .thenReturn(getAuthorList(1L));
@@ -54,14 +53,14 @@ public class AuthorServiceTest {
         List<AuthorDTO> authorList = authorService.findAll();
 
         //then
-        assertEquals(1, authorList.size());
-        assertEquals("First Name 1", authorList.get(0).getFirstName());
-        assertEquals("Last Name 1", authorList.get(0).getLastName());
+        Assertions.assertEquals(1, authorList.size());
+        Assertions.assertEquals("First Name 1", authorList.get(0).getFirstName());
+        Assertions.assertEquals("Last Name 1", authorList.get(0).getLastName());
     }
 
     @Test
     @DisplayName("Get a list of 500 Authors")
-    public void given500Authors_whenFindAll_then500AuthorList() {
+    void given500Authors_whenFindAll_then500AuthorList() {
         //given
         when(authorRepository.findAll())
                 .thenReturn(getAuthorList(500L));
@@ -70,12 +69,12 @@ public class AuthorServiceTest {
         List<AuthorDTO> authorList = authorService.findAll();
 
         //then
-        assertEquals(500, authorList.size());
+        Assertions.assertEquals(500, authorList.size());
     }
 
     @Test
     @DisplayName("Get an Author by Id")
-    public void givenSingleAuthor_whenFindById_thenGetSingleAuthor(){
+    void givenSingleAuthor_whenFindById_thenGetSingleAuthor(){
         //given
         when(authorRepository.findById(any(Long.class)))
                 .thenReturn(Optional.of(getSingleAuthor(1L)));
@@ -84,15 +83,15 @@ public class AuthorServiceTest {
         Optional<AuthorDTO> authorOpt = authorService.findById(1L);
 
         //then
-        assertTrue(authorOpt.isPresent());
-        assertNotNull(authorOpt.get().getId());
-        assertEquals("First Name 1", authorOpt.get().getFirstName());
-        assertEquals("Last Name 1", authorOpt.get().getLastName());
+        Assertions.assertTrue(authorOpt.isPresent());
+        Assertions.assertNotNull(authorOpt.get().getId());
+        Assertions.assertEquals("First Name 1", authorOpt.get().getFirstName());
+        Assertions.assertEquals("Last Name 1", authorOpt.get().getLastName());
     }
 
     @Test
     @DisplayName("Get an Author by Id and return empty result")
-    public void givenNoAuthor_whenFindById_thenGetEmptyOptional(){
+    void givenNoAuthor_whenFindById_thenGetEmptyOptional(){
         //given
         when(authorRepository.findById(any(Long.class)))
                 .thenReturn(Optional.empty());
@@ -101,12 +100,12 @@ public class AuthorServiceTest {
         Optional<AuthorDTO> authorOpt = authorService.findById(1L);
 
         //then
-        assertFalse(authorOpt.isPresent());
+        Assertions.assertFalse(authorOpt.isPresent());
     }
 
     @Test
     @DisplayName("Save an Author")
-    public void givenAuthor_whenSave_thenGetSavedAuthor() {
+    void givenAuthor_whenSave_thenGetSavedAuthor() {
         //given
         when(authorRepository.save(any(Author.class)))
                 .thenReturn(getSingleAuthor(1L));
@@ -117,12 +116,12 @@ public class AuthorServiceTest {
         AuthorDTO savedAuthor = authorService.save(authorDTO);
 
         //then
-        assertNotNull(savedAuthor.getId());
+        Assertions.assertNotNull(savedAuthor.getId());
     }
 
     @Test
     @DisplayName("Update an Author")
-    public void givenSavedAuthor_whenUpdate_thenAuthorIsUpdated() {
+    void givenSavedAuthor_whenUpdate_thenAuthorIsUpdated() {
         //given
         when(authorRepository.findById(any(Long.class)))
                 .thenReturn(Optional.of(getSingleAuthor(1L)));
@@ -136,8 +135,8 @@ public class AuthorServiceTest {
         AuthorDTO updatedAuthorDTO = authorService.update(1L, toBeUpdatedAuthorDTO);
 
         //then
-        assertEquals(toBeUpdatedAuthorDTO.getFirstName(), updatedAuthorDTO.getFirstName());
-        assertEquals(toBeUpdatedAuthorDTO.getLastName(), updatedAuthorDTO.getLastName());
+        Assertions.assertEquals(toBeUpdatedAuthorDTO.getFirstName(), updatedAuthorDTO.getFirstName());
+        Assertions.assertEquals(toBeUpdatedAuthorDTO.getLastName(), updatedAuthorDTO.getLastName());
     }
 
 }

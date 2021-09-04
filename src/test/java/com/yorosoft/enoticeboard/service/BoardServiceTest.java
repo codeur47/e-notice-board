@@ -3,6 +3,7 @@ package com.yorosoft.enoticeboard.service;
 import com.yorosoft.enoticeboard.dto.BoardDTO;
 import com.yorosoft.enoticeboard.model.Board;
 import com.yorosoft.enoticeboard.repository.BoardRepository;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,13 +16,12 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.yorosoft.enoticeboard.util.TestDataFactory.*;
-import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("Unit tests of BoardService class")
-public class BoardServiceTest {
+class BoardServiceTest {
 
     @Mock
     private BoardRepository boardRepository;
@@ -31,7 +31,7 @@ public class BoardServiceTest {
 
     @Test
     @DisplayName("Get an empty list of Boards")
-    public void givenNoBoards_whenFindAll_thenGetEmptyList() {
+    void givenNoBoards_whenFindAll_thenGetEmptyList() {
         //given
         when(boardRepository.findAll())
                 .thenReturn(Collections.emptyList());
@@ -40,12 +40,12 @@ public class BoardServiceTest {
         List<BoardDTO> boardList = boardService.findAll();
 
         //then
-        assertEquals(0, boardList.size());
+        Assertions.assertEquals(0, boardList.size());
     }
 
     @Test
     @DisplayName("Get a list with single Board")
-    public void givenSingleBoards_whenFindAll_thenSingleBoardList() {
+    void givenSingleBoards_whenFindAll_thenSingleBoardList() {
         //given
         when(boardRepository.findAll())
                 .thenReturn(getBoardList(1L, 5L));
@@ -54,14 +54,14 @@ public class BoardServiceTest {
         List<BoardDTO> boardList = boardService.findAll();
 
         //then
-        assertEquals(1, boardList.size());
-        assertEquals("Board 1", boardList.get(0).getTitle());
-        assertEquals(5, boardList.get(0).getNoticeList().size());
+        Assertions.assertEquals(1, boardList.size());
+        Assertions.assertEquals("Board 1", boardList.get(0).getTitle());
+        Assertions.assertEquals(5, boardList.get(0).getNoticeList().size());
     }
 
     @Test
     @DisplayName("Get a list of 500 Boards")
-    public void given500Boards_whenFindAll_then500BoardList() {
+    void given500Boards_whenFindAll_then500BoardList() {
         //given
         when(boardRepository.findAll())
                 .thenReturn(getBoardList(500L, 5L));
@@ -70,12 +70,12 @@ public class BoardServiceTest {
         List<BoardDTO> boardList = boardService.findAll();
 
         //then
-        assertEquals(500, boardList.size());
+        Assertions.assertEquals(500, boardList.size());
     }
 
     @Test
     @DisplayName("Get a Board by Id")
-    public void givenSingleBoard_whenFindById_thenGetSingleBoard(){
+    void givenSingleBoard_whenFindById_thenGetSingleBoard(){
         //given
         when(boardRepository.findById(any(Long.class)))
                 .thenReturn(Optional.of(getSingleBoard(1L, 1L)));
@@ -84,19 +84,19 @@ public class BoardServiceTest {
         Optional<BoardDTO> boardDTOOpt = boardService.findById(1L);
 
         //then
-        assertTrue(boardDTOOpt.isPresent());
-        assertNotNull(boardDTOOpt.get().getId());
-        assertEquals("Board 1", boardDTOOpt.get().getTitle());
-        assertEquals(1, boardDTOOpt.get().getNoticeList().size());
-        assertNotNull(boardDTOOpt.get().getNoticeList().get(0));
-        assertNotNull(boardDTOOpt.get().getNoticeList().get(0).getId());
-        assertEquals("Notice 1", boardDTOOpt.get().getNoticeList().get(0).getTitle());
-        assertEquals("Notice description 1", boardDTOOpt.get().getNoticeList().get(0).getDescription());
+        Assertions.assertTrue(boardDTOOpt.isPresent());
+        Assertions.assertNotNull(boardDTOOpt.get().getId());
+        Assertions.assertEquals("Board 1", boardDTOOpt.get().getTitle());
+        Assertions.assertEquals(1, boardDTOOpt.get().getNoticeList().size());
+        Assertions.assertNotNull(boardDTOOpt.get().getNoticeList().get(0));
+        Assertions.assertNotNull(boardDTOOpt.get().getNoticeList().get(0).getId());
+        Assertions.assertEquals("Notice 1", boardDTOOpt.get().getNoticeList().get(0).getTitle());
+        Assertions.assertEquals("Notice description 1", boardDTOOpt.get().getNoticeList().get(0).getDescription());
     }
 
     @Test
     @DisplayName("Get a Board by Id and return empty result")
-    public void givenNoBoard_whenFindById_thenGetEmptyOptional(){
+    void givenNoBoard_whenFindById_thenGetEmptyOptional(){
         //given
         when(boardRepository.findById(any(Long.class)))
                 .thenReturn(Optional.empty());
@@ -105,12 +105,12 @@ public class BoardServiceTest {
         Optional<BoardDTO> boardDTOOpt = boardService.findById(1L);
 
         //then
-        assertFalse(boardDTOOpt.isPresent());
+        Assertions.assertFalse(boardDTOOpt.isPresent());
     }
 
     @Test
     @DisplayName("Save a Board")
-    public void givenBoard_whenSave_thenGetSavedBoard() {
+    void givenBoard_whenSave_thenGetSavedBoard() {
         //given
         when(boardRepository.save(any(Board.class)))
                 .thenReturn(getSingleBoard(1L, 1L));
@@ -121,12 +121,12 @@ public class BoardServiceTest {
         BoardDTO savedBoard = boardService.save(boardDTO);
 
         //then
-        assertNotNull(savedBoard.getId());
+        Assertions.assertNotNull(savedBoard.getId());
     }
 
     @Test
     @DisplayName("Update a Board")
-    public void givenSavedBoard_whenUpdate_thenBoardIsUpdated() {
+    void givenSavedBoard_whenUpdate_thenBoardIsUpdated() {
         //given
         when(boardRepository.findById(any(Long.class)))
                 .thenReturn(Optional.of(getSingleBoard(1L, 1L)));
@@ -140,7 +140,7 @@ public class BoardServiceTest {
         BoardDTO updatedBoardDTO = boardService.update(1L, toBeUpdatedBoardDTO);
 
         //then
-        assertEquals(toBeUpdatedBoardDTO.getTitle(), updatedBoardDTO.getTitle());
-        assertEquals(5L, updatedBoardDTO.getNoticeList().size());
+        Assertions.assertEquals(toBeUpdatedBoardDTO.getTitle(), updatedBoardDTO.getTitle());
+        Assertions.assertEquals(5L, updatedBoardDTO.getNoticeList().size());
     }
 }

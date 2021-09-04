@@ -5,8 +5,10 @@ import com.yorosoft.enoticeboard.model.Notice;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
-@Mapper(componentModel = "spring")
+@Mapper
 public interface NoticeMapper {
+
+    NoticeMapper INSTANCE = Mappers.getMapper(NoticeMapper.class);
 
     NoticeDTO noticeToDto(Notice notice);
     Notice dtoToNotice(NoticeDTO noticeDTO);

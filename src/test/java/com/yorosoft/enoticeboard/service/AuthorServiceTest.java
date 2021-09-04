@@ -1,136 +1,143 @@
 package com.yorosoft.enoticeboard.service;
 
-import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
 import com.yorosoft.enoticeboard.dto.AuthorDTO;
 import com.yorosoft.enoticeboard.mapper.AuthorMapper;
 import com.yorosoft.enoticeboard.model.Author;
 import com.yorosoft.enoticeboard.repository.AuthorRepository;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.Date;
-import java.util.Optional;
-
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-@ContextConfiguration(classes = {AuthorService.class})
-@ExtendWith(SpringExtension.class)
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+import static org.junit.Assert.*;
+import static com.yorosoft.enoticeboard.util.TestDataFactory.*;
+
+@ExtendWith(MockitoExtension.class)
+@DisplayName("Unit tests of AuthorService class")
 public class AuthorServiceTest {
-    @MockBean
-    private AuthorMapper authorMapper;
-
-    @MockBean
+    @Mock
     private AuthorRepository authorRepository;
 
-    @Autowired
+    @InjectMocks
     private AuthorService authorService;
 
     @Test
-    public void testFindAll() {
-        Iterable<Author> iterable = (Iterable<Author>) mock(Iterable.class);
-        doNothing().when(iterable).forEach((java.util.function.Consumer<? super Author>) any());
-        when(this.authorRepository.findAll()).thenReturn(iterable);
-        assertTrue(this.authorService.findAll().isEmpty());
-        verify(this.authorRepository).findAll();
-        verify(iterable).forEach((java.util.function.Consumer<? super Author>) any());
+    @DisplayName("Get an empty list of Author")
+    public void givenNoAuthors_whenFindAll_thenGetEmptyList() {
+        //given
+        when(authorRepository.findAll())
+                .thenReturn(Collections.emptyList());
+
+        //when
+        List<AuthorDTO> authorList = authorService.findAll();
+
+        //then
+        assertEquals(0, authorList.size());
     }
 
     @Test
-    public void testFindById() {
-        Author author = new Author();
-        author.setLastName("Doe");
-        LocalDateTime atStartOfDayResult = LocalDate.of(1970, 1, 1).atStartOfDay();
-        author.setCreationDate(Date.from(atStartOfDayResult.atZone(ZoneId.systemDefault()).toInstant()));
-        author.setId(123L);
-        author.setFirstName("Jane");
-        Optional<Author> ofResult = Optional.<Author>of(author);
-        when(this.authorRepository.findById((Long) any())).thenReturn(ofResult);
-        when(this.authorMapper.authorToDto((Author) any())).thenReturn(new AuthorDTO("Jane", "Doe"));
-        assertTrue(this.authorService.findById(123L).isPresent());
-        verify(this.authorRepository).findById((Long) any());
-        verify(this.authorMapper).authorToDto((Author) any());
+    @DisplayName("Get a list with single Author")
+    public void givenSingleAuthors_whenFindAll_thenSingleAuthorList() {
+        //given
+        when(authorRepository.findAll())
+                .thenReturn(getAuthorList(1L));
+
+        //when
+        List<AuthorDTO> authorList = authorService.findAll();
+
+        //then
+        assertEquals(1, authorList.size());
+        assertEquals("First Name 1", authorList.get(0).getFirstName());
+        assertEquals("Last Name 1", authorList.get(0).getLastName());
     }
 
     @Test
-    public void testSave() {
-        Author author = new Author();
-        author.setLastName("Doe");
-        LocalDateTime atStartOfDayResult = LocalDate.of(1970, 1, 1).atStartOfDay();
-        author.setCreationDate(Date.from(atStartOfDayResult.atZone(ZoneId.systemDefault()).toInstant()));
-        author.setId(123L);
-        author.setFirstName("Jane");
-        when(this.authorRepository.save((Author) any())).thenReturn(author);
+    @DisplayName("Get a list of 500 Authors")
+    public void given500Authors_whenFindAll_then500AuthorList() {
+        //given
+        when(authorRepository.findAll())
+                .thenReturn(getAuthorList(500L));
 
-        Author author1 = new Author();
-        author1.setLastName("Doe");
-        LocalDateTime atStartOfDayResult1 = LocalDate.of(1970, 1, 1).atStartOfDay();
-        author1.setCreationDate(Date.from(atStartOfDayResult1.atZone(ZoneId.systemDefault()).toInstant()));
-        author1.setId(123L);
-        author1.setFirstName("Jane");
-        AuthorDTO authorDTO = new AuthorDTO("Jane", "Doe");
+        //when
+        List<AuthorDTO> authorList = authorService.findAll();
 
-        when(this.authorMapper.authorToDto((Author) any())).thenReturn(authorDTO);
-        when(this.authorMapper.dtoToAuthor((AuthorDTO) any())).thenReturn(author1);
-        assertSame(authorDTO, this.authorService.save(new AuthorDTO("Jane", "Doe")));
-        verify(this.authorRepository).save((Author) any());
-        verify(this.authorMapper).authorToDto((Author) any());
-        verify(this.authorMapper).dtoToAuthor((AuthorDTO) any());
+        //then
+        assertEquals(500, authorList.size());
     }
 
     @Test
-    public void testDelete() {
-        doNothing().when(this.authorRepository).deleteById((Long) any());
-        this.authorService.delete(123L);
-        verify(this.authorRepository).deleteById((Long) any());
+    @DisplayName("Get an Author by Id")
+    public void givenSingleAuthor_whenFindById_thenGetSingleAuthor(){
+        //given
+        when(authorRepository.findById(any(Long.class)))
+                .thenReturn(Optional.of(getSingleAuthor(1L)));
+
+        //when
+        Optional<AuthorDTO> authorOpt = authorService.findById(1L);
+
+        //then
+        assertTrue(authorOpt.isPresent());
+        assertNotNull(authorOpt.get().getId());
+        assertEquals("First Name 1", authorOpt.get().getFirstName());
+        assertEquals("Last Name 1", authorOpt.get().getLastName());
     }
 
     @Test
-    public void testUpdate() {
-        Author author = new Author();
-        author.setLastName("Doe");
-        LocalDateTime atStartOfDayResult = LocalDate.of(1970, 1, 1).atStartOfDay();
-        author.setCreationDate(Date.from(atStartOfDayResult.atZone(ZoneId.systemDefault()).toInstant()));
-        author.setId(123L);
-        author.setFirstName("Jane");
-        Optional<Author> ofResult = Optional.<Author>of(author);
+    @DisplayName("Get an Author by Id and return empty result")
+    public void givenNoAuthor_whenFindById_thenGetEmptyOptional(){
+        //given
+        when(authorRepository.findById(any(Long.class)))
+                .thenReturn(Optional.empty());
 
-        Author author1 = new Author();
-        author1.setLastName("Doe");
-        LocalDateTime atStartOfDayResult1 = LocalDate.of(1970, 1, 1).atStartOfDay();
-        author1.setCreationDate(Date.from(atStartOfDayResult1.atZone(ZoneId.systemDefault()).toInstant()));
-        author1.setId(123L);
-        author1.setFirstName("Jane");
-        when(this.authorRepository.save((Author) any())).thenReturn(author1);
-        when(this.authorRepository.findById((Long) any())).thenReturn(ofResult);
+        //when
+        Optional<AuthorDTO> authorOpt = authorService.findById(1L);
 
-        Author author2 = new Author();
-        author2.setLastName("Doe");
-        LocalDateTime atStartOfDayResult2 = LocalDate.of(1970, 1, 1).atStartOfDay();
-        author2.setCreationDate(Date.from(atStartOfDayResult2.atZone(ZoneId.systemDefault()).toInstant()));
-        author2.setId(123L);
-        author2.setFirstName("Jane");
-        AuthorDTO authorDTO = new AuthorDTO("Jane", "Doe");
-
-        when(this.authorMapper.authorToDto((Author) any())).thenReturn(authorDTO);
-        when(this.authorMapper.dtoToAuthor((AuthorDTO) any())).thenReturn(author2);
-        assertSame(authorDTO, this.authorService.update(123L, new AuthorDTO("Jane", "Doe")));
-        verify(this.authorRepository).findById((Long) any());
-        verify(this.authorRepository).save((Author) any());
-        verify(this.authorMapper).authorToDto((Author) any());
-        verify(this.authorMapper).dtoToAuthor((AuthorDTO) any());
+        //then
+        assertFalse(authorOpt.isPresent());
     }
+
+    @Test
+    @DisplayName("Save an Author")
+    public void givenAuthor_whenSave_thenGetSavedAuthor() {
+        //given
+        when(authorRepository.save(any(Author.class)))
+                .thenReturn(getSingleAuthor(1L));
+
+        AuthorDTO authorDTO = getSingleAuthorDTO(1L);
+
+        //when
+        AuthorDTO savedAuthor = authorService.save(authorDTO);
+
+        //then
+        assertNotNull(savedAuthor.getId());
+    }
+
+    @Test
+    @DisplayName("Update an Author")
+    public void givenSavedAuthor_whenUpdate_thenAuthorIsUpdated() {
+        //given
+        when(authorRepository.findById(any(Long.class)))
+                .thenReturn(Optional.of(getSingleAuthor(1L)));
+
+        when(authorRepository.save(any(Author.class)))
+                .thenReturn(getSingleAuthor(2L));
+
+        AuthorDTO toBeUpdatedAuthorDTO = getSingleAuthorDTO(2L);
+
+        //when
+        AuthorDTO updatedAuthorDTO = authorService.update(1L, toBeUpdatedAuthorDTO);
+
+        //then
+        assertEquals(toBeUpdatedAuthorDTO.getFirstName(), updatedAuthorDTO.getFirstName());
+        assertEquals(toBeUpdatedAuthorDTO.getLastName(), updatedAuthorDTO.getLastName());
+    }
+
 }
-
